@@ -1,0 +1,14 @@
+{
+  "name": "Sensor-Sun",
+  "version": "1.0.0",
+  "description": "Sun state sensor on Docker",
+  "author": "Dmitry A. Grechka <dmitry@grechka.family",
+  "main": "sensor.js",
+  "scripts": {
+    "start": "node sensor.js"
+  },
+  "dependencies": {
+    "suncalc": "~1.7.0",
+    "node-redis":"~0.1.7"
+  }
+}
