@@ -54,13 +54,17 @@ function Tick() {
       currentPrecStateTime = times[propertyName];
     }
   }
+  if(currentPrecState == "unknown") {
+    //all the computed events are in the future. discarding until reaching one of the events
+    return;
+  }
   if(preciseState !== currentPrecState) {
-    console.log(`Current precise state changed from ${preciseState} to ${currentPrecState} at ${currentPrecStateTime}`);
+    console.log(`precise state: ${currentPrecState}`);
     preciseState = currentPrecState;
   }
   var currentState = preciseToNormal[currentPrecState];
   if(state !== currentState) {
-    console.log(`Current state changed from ${state} to ${currentState}`);
+    console.log(`state: ${currentState}`);
     state = currentState;
   }
 }
