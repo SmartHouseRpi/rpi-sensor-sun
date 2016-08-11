@@ -1,9 +1,11 @@
 'use strict';
 
 const SunCalc = require('suncalc');
+const Redis = require('node-redis')
 
 var lat = undefined;
 var lon = undefined;
+var db_key = undefined;
 
 if(typeof process.env.lat !== 'undefined') {
   lat = process.env.lat;
@@ -16,6 +18,13 @@ if(typeof process.env.lon !== 'undefined') {
 } else {
   throw "'lon' environmental variable is not set. Set it and restart container";
 }
+
+if(typeof process.env.db_key !== 'undefined') {
+  db_key = process.env.db_key;
+} else {
+  throw "'db_key'(redis key for publishing sun state) environmental variable is not set. Set it and restart container";
+}
+
 
 console.log(`Tracking the Sun state for coordinates ${lat} ${lon}`);
 
@@ -66,6 +75,10 @@ function Tick() {
   if(state !== currentState) {
     console.log(`state: ${currentState}`);
     state = currentState;
+
+    var pub = Redis.createClient(6379, "redis")
+    pub.publish(db_key, state);
+    pub.quit();
   }
 }
 
