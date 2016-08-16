@@ -36,8 +36,8 @@ var preciseToNormal = {
   "sunriseEnd": "day",
   "goldenHourEnd": "day",
   "solarNoon": "day",
-  "goldenHour": "day",
-  "sunsetStart": "day",
+  "goldenHour": "twilight",
+  "sunsetStart": "twilight",
   "sunset": "twilight",
   "dusk": "night",
   "nauticalDusk": "night",
@@ -76,9 +76,12 @@ function Tick() {
     console.log(`state: ${currentState}`);
     state = currentState;
 
-    var pub = Redis.createClient(6379, "redis")
-    pub.publish(db_key, state);
+    console.log("Saving state into database...");
+    var pub = Redis.createClient(6379, "redis");
+    pub.set(db_key, state, Redis.print);
+    pub.publish(`${db_key}.subscription`, state, Redis.print);
     pub.quit();
+    cosnole.log("State saved in the database");
   }
 }
 
