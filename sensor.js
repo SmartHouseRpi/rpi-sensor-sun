@@ -68,20 +68,30 @@ function Tick() {
     return;
   }
   if(preciseState !== currentPrecState) {
-    console.log(`precise state: ${currentPrecState}`);
+    console.log(`new precise state: ${currentPrecState}`);
     preciseState = currentPrecState;
   }
   var currentState = preciseToNormal[currentPrecState];
   if(state !== currentState) {
-    console.log(`state: ${currentState}`);
-    state = currentState;
+    console.log(`new state: ${currentState}`);
 
-    console.log("Saving state into database...");
     var pub = Redis.createClient(6379, "redis");
-    pub.set(db_key, state, Redis.print);
-    pub.publish(`${db_key}.subscription`, state, Redis.print);
+    pub.set(db_key, currentState,function(error) {
+      if(!error) {
+        console.log("saved new state in the database");
+        pub.publish(`${db_key}.subscription`, currentState,function (error){
+        if(!error) {
+          console.log("changed state notification sent");
+          state = currentState;
+        }
+        else
+          console.warn("error sending notification: "+error);
+        });
+      }
+      else
+        console.warn("error saving statee: "+error);
+      });
     pub.quit();
-    console.log("State saved in the database");
   }
 }
 
