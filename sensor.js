@@ -81,7 +81,7 @@ function Tick() {
     pub.set(db_key, state, Redis.print);
     pub.publish(`${db_key}.subscription`, state, Redis.print);
     pub.quit();
-    cosnole.log("State saved in the database");
+    console.log("State saved in the database");
   }
 }
 
