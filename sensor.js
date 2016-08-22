@@ -1,7 +1,7 @@
 'use strict';
 
 const SunCalc = require('suncalc');
-const Redis = require('node-redis')
+const Redis = require('redis')
 
 var lat = undefined;
 var lon = undefined;
@@ -48,6 +48,8 @@ var preciseToNormal = {
   "dawn": "twilight"
 };
 
+var pub = Redis.createClient(6379, "redis");
+
 function Tick() {
   var now = new Date();
 //  console.log(`Current time is ${now}`);
@@ -75,7 +77,6 @@ function Tick() {
   if(state !== currentState) {
     console.log(`new state: ${currentState}`);
 
-    var pub = Redis.createClient(6379, "redis");
     pub.set(db_key, currentState,function(error) {
       if(!error) {
         console.log("saved new state in the database");
@@ -89,9 +90,8 @@ function Tick() {
         });
       }
       else
-        console.warn("error saving statee: "+error);
+        console.warn("error saving state: "+error);
       });
-    pub.quit();
   }
 }
 
