@@ -36,7 +36,7 @@ var preciseToNormal = {
   "sunriseEnd": "day",
   "goldenHourEnd": "day",
   "solarNoon": "day",
-  "goldenHour": "twilight",
+  "goldenHour": "day",
   "sunsetStart": "twilight",
   "sunset": "twilight",
   "dusk": "night",
